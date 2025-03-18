@@ -1,0 +1,88 @@
+<?php if(!empty($params['before'])): ?>
+<div class="yellow-bg">
+   <h3>
+   <?php 
+    switch($params['before'])
+    {   
+        case 'created':
+            echo 'Faktura zapisana ';
+            break;
+        case 'edited':
+            echo 'Dane faktury zostały zaktualizowane';
+            break;
+        case 'deleted':
+            echo 'Dane faktury usunięte z bazy';        
+            break;
+    }
+    ?>
+   </h3>
+   <?php endif ?>
+   <?php if(!empty($params['error'])): ?>
+<div class="yellow-bg">
+   <h3>
+   <?php 
+    switch($params['error'])
+    {   
+        case 'missingInvoiceId':
+            echo 'Brak danych, spróbuj ponownie';
+            break;
+        case 'invoiceNotFound':
+            echo 'Brak danych, spróbuj ponownie';
+            break;
+    }
+    ?>
+   </h3>
+</div>
+<?php endif; ?>
+
+<div class="templatemo-content-widget white-bg">
+<!-- PASEK NAWIGACJI -->
+<div class="templatemo-top-nav-container">
+          <div class="row">
+            <nav class="templatemo-top-nav col-lg-12 col-md-12">
+              <ul class="text-uppercase">
+                <li><a href="/?action=newinvoice" class="active">Wystaw fakturę</a></li>
+              </ul>  
+            </nav> 
+          </div>
+        </div>            
+</div>
+  
+<!-- TABELA         -->
+<div class="templatemo-content-widget no-padding">
+    <div class="panel panel-default table-responsive">
+    <div class="panel-heading"><h2>Lista faktur</h2></div>
+        <table class="table table-striped table-bordered templatemo-user-table">
+            <thead>
+                <tr>
+                    <td width=40 >Nr</td>
+                    <td width=100>Numer dokumentu</td>
+                    <td width=100>Data wystawienia</td>
+                    <td width=300>Kontrachent</td>
+                    <td width=150>NIP</td>
+                    <td width=150>Produkt/usługa</td>
+                    <td width=100>Kwota brutto</td>
+                    <td width=200>Opcje</td>
+                </tr>
+            </thead>
+            <tbody>
+               <?php foreach($params['invoices'] ?? [] as $invoice): ?>
+                <tr>
+                    <td><?php echo ($invoice['id_invoice']); ?>   </td>
+                    <td><?php echo ($invoice['invoice_number']); ?>      </td>
+                    <td><?php echo ($invoice['document_date']); ?>      </td>
+                    <td><?php echo ($invoice['contractor_name']); ?>      </td>
+                    <td><?php echo ($invoice['NIP']); ?>      </td>
+                    <td><?php echo ($invoice['product']); ?>      </td>
+                    <td><?php echo ($invoice['brut_price']); ?>      </td>
+                    <td><a href="/?action=showinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button>Szczegóły</button></a>
+                    <a href="/?action=deleteinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button>Usuń</button></a>
+                    </td>
+
+                </tr> 
+                    <?php endforeach; ?>
+                </tr>                    
+            </tbody>
+    </table>    
+    </div> 
+</div> 
