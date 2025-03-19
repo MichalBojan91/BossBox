@@ -4,7 +4,7 @@
           <div class="row">
             <nav class="templatemo-top-nav col-lg-12 col-md-12">
               <ul class="text-uppercase">
-                <li><a href="/?action=staff" class="active">Wróć do listy pracowników</a></li>
+                <li><a href="/?action=allstaff" class="active">Wróć do listy pracowników</a></li>
               </ul>  
             </nav> 
           </div>
@@ -49,10 +49,13 @@
                     <p><?php echo $worker['city'] ?></p>                  
                 </div> 
               </div>
-              <?php endif ?>
+              
               <div class="form-group text-right">
-                <button><a href="/?action=editstaff&id=<?php echo (int)$worker['id_worker'] ?>"> Edytuj dane pracownika</button></a>
-                <button><a href="/?action=sendmail&id=<?php echo (int)$worker['id_worker'] ?>"> Wyślij wiadomość email</button></a>
+                <form method="post" action="/?action=deletestaff">
+                    <input type="hidden" name="id_worker" value="<?php echo $worker['id_worker'] ?>" >
+                <button type="submit">Usuń dane z bazy</button>
+                </form>
+                <?php endif ?>
               </div> 
 </div>                         
           </div>  

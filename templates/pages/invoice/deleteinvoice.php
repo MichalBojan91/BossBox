@@ -4,13 +4,14 @@
           <div class="row">
             <nav class="templatemo-top-nav col-lg-12 col-md-12">
               <ul class="text-uppercase">
-                <li><a href="/?action=invoice" class="active">Wróć do listy faktur</a></li>
+                <li><a href="/?action=allinvoice" class="active">Wróć do listy faktur</a></li>
               </ul>  
             </nav> 
           </div>
         </div>            
 </div>
 <?php $invoice = $params['invoice'] ?? null;?>
+<?php if($invoice) : ?>
         <div class="templatemo-content-widget no-padding">
         <h2 class="margin-bottom-10">Faktura nr:<?php echo $invoice['invoice_number'] ?></h2>
             <div class="row form-group">
@@ -79,12 +80,12 @@
                     <p> <?php echo $invoice['brut_price']?> </p>                  
                 </div> 
               </div>
+            <form method="post" action="/?action=deleteinvoice">
+                <input type="hidden" name="id_invoice" value="<?php echo $invoice['id_invoice'] ?>" >
               <div class="form-group text-right">
-               <a href="/?action=editinvoice&id=<?php echo $invoice['id_invoice']?>"> <button class="templatemo-blue-button">Edytuj dane faktury</button></a>
-               <a href="/?action=downloadinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button class="templatemo-blue-button">Pobierz</button></a>
-               <a href="/?action=printinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button class="templatemo-blue-button">Drukuj</button></a>
-              </div> 
-
+               <button class="templatemo-blue-button" type="submit">Usuń fakturę</button>
             </form>
+              </div> 
+            <?php endif ?>
 </div>                         
       

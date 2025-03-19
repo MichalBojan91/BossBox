@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Request;
 use App\View;
 use App\Database;
+use App\DatabaseNote;
 use App\Exception\ConfigurationException;
 use App\SendMail;
 
@@ -17,7 +18,7 @@ class AbstractController
     protected const DEFAULT_ACTION_MAIN = 'main';
     
 
-    private static array $configuration = [];
+    protected static array $configuration = [];
 
     protected Database $database;
     protected Request $request;
@@ -39,7 +40,6 @@ class AbstractController
         }
 
         $this->database = new Database(self::$configuration['db']);
-                
         $this->request = $request;
         $this->view= new View();
         $this->sendMail = new SendMail();

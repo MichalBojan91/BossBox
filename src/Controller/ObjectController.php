@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\StaffController;
-use App\HoursController;
-use App\InvoiceController;
-use App\NoteController;
+use App\Controller\StaffController;
+use App\Controller\HoursController;
+use App\Controller\InvoiceController;
+use App\Controller\NoteController;
 
 class ObjectController
 {
-    
-
     public static function ObjectSwitch(?string $get, $request):void
     {
-        $notesAction = ['notes', 'createnote', 'deletenote', 'editnote', 'shownote'];
-        $invoiceAction = ['invoice', 'newinvoice', 'showinvoice', 'editinvoice','deleteinvoice', 'printinvoice', 'downloadinvoice'];
-        $staffAction = ['staff', 'addstaff', 'deletestaff', 'sendmail', 'showstaff', 'editstaff'];
+        $notesAction = ['allnotes', 'createnote', 'deletenote', 'editnote', 'shownote'];
+        $invoiceAction = ['allinvoice', 'newinvoice', 'showinvoice', 'editinvoice','deleteinvoice', 'printinvoice', 'downloadinvoice'];
+        $staffAction = ['allstaff', 'addstaff', 'deletestaff', 'sendmail', 'showstaff', 'editstaff'];
         $hoursAction = ['hours', 'addhours', 'chceckhours', 'printsummaryhours'];
 
         switch($get)

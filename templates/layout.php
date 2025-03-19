@@ -28,10 +28,10 @@
         <nav class="templatemo-left-nav">          
           <ul>
             <li><a href="/" class="active"><i class="fa fa-home fa-fw"></i>Panel główny</a></li>
-            <li><a href="/?action=staff"><i class="fa fa-bar-chart fa-fw"></i>Pracownicy</a></li>
+            <li><a href="/?action=allstaff"><i class="fa fa-bar-chart fa-fw"></i>Pracownicy</a></li>
             <li><a href="/?action=hours"><i class="fa fa-database fa-fw"></i>Godziny pracy</a></li>
-            <li><a href="/?action=invoice"><i class="fa fa-database fa-fw"></i>Faktury</a></li>
-            <li><a href="/?action=notes"><i class="fa fa-database fa-fw"></i>Notatki</a></li>
+            <li><a href="/?action=allinvoice"><i class="fa fa-database fa-fw"></i>Faktury</a></li>
+            <li><a href="/?action=allnotes"><i class="fa fa-database fa-fw"></i>Notatki</a></li>
             <li><a href="/?action=companydata"><i class="fa fa-database fa-fw"></i>Dane firmy</a></li>
             <!-- WYLOGOWYWANIE OKODOWAC -->
             <!-- <li><a href="login.php"><i class="fa fa-eject fa-fw"></i>Wyloguj</a></li>  -->

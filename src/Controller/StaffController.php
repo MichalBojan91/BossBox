@@ -1,30 +1,42 @@
 <?php
 declare(strict_types=1);
 
-namespace App;
+namespace App\Controller;
+
+require_once("src/View.php");
+require_once("src/Database.php");
+require_once("src/DatabaseStaff.php");
+require_once("PHPMailer/src/PHPMailer.php");
+require_once("PHPMailer/src/Exception.php");
+require_once("PHPMailer/src/SMTP.php");
 
 use App\Controller\AbstractController;
-use App\Exception\AppException;
+use App\DatabaseStaff;
+use App\Request;
 use App\Exception\NotFoundException;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use App\SendMail;
 
-require_once("src/View.php");
-require_once("src/Database.php");
-require_once("PHPMailer/src/PHPMailer.php");
-require_once("PHPMailer/src/Exception.php");
-require_once("PHPMailer/src/SMTP.php");
+
 
 class StaffController extends AbstractController
 {
-    private const DEFAULT_STAFF_ACTION = 'staff';
-    
-    public function staffAction(): void
+    private const DEFAULT_STAFF_ACTION = 'allstaff';
+
+    protected DatabaseStaff $databaseStaff;
+
+    public function __construct(Request $request)
     {
-        $staff = $this->database->getStaff();
-        $this->view->render('staff',
+        parent::__construct($request);
+        $this->databaseStaff = new DatabaseStaff(self::$configuration['db']);
+    }
+    
+    public function allstaffAction(): void
+    {
+        $staff = $this->databaseStaff->getStaff();
+        $this->view->render('staff/staff',
             [
                 'staff' => $staff,
                 'before' => $this->request->getParam('before'),
@@ -46,11 +58,11 @@ class StaffController extends AbstractController
                 'city' => $this->request->postParam('city'),
                 'email' => $this->request->postParam('email')
             ];
-            $this->database->addStaff($workerData);
+            $this->databaseStaff->addStaff($workerData);
 
             $this->redirect(self::DEFAULT_STAFF_ACTION, ['before' =>'created' ]);  //przeniesienie i przekazanie parametru zeby wyświetlić info
         }
-        $this->view->render('addstaff');
+        $this->view->render('staff/addstaff');
     }
 
     public function editstaffAction():void
@@ -67,17 +79,16 @@ class StaffController extends AbstractController
         ];
         if($this->request->isPost()) {
             $workerId = (int)$this->request->postParam('id_worker');
-            $this->database->editStaff($workerData, $workerId);
+            $this->databaseStaff->editStaff($workerData, $workerId);
 
             $this->redirect(self::DEFAULT_STAFF_ACTION, ['before' =>'edited' ]);  //przeniesienie i przekazanie parametru zeby wyświetlić info
         }
-        $this->view->render('editstaff', ['worker'=>$this->getWorkerData()]);
+        $this->view->render('staff/editstaff', ['worker'=>$this->getWorkerData()]);
     }
-
 
     public function showstaffAction(): void
     {
-        $this->view->render('showstaff', ['worker'=>$this->getWorkerData()]);
+        $this->view->render('staff/showstaff', ['worker'=>$this->getWorkerData()]);
     }
 
     public function getWorkerData(): array
@@ -87,7 +98,7 @@ class StaffController extends AbstractController
         $this->redirect(self::DEFAULT_STAFF_ACTION, ['error' =>'missingStaffId' ]);
        } 
        try{
-        $worker = $this->database->getWorker($workerId);
+        $worker = $this->databaseStaff->getWorker($workerId);
        }catch(NotFoundException $e){
         $this->redirect(self::DEFAULT_STAFF_ACTION, ['error' =>'staffNotFound' ]);
        }
@@ -99,10 +110,10 @@ class StaffController extends AbstractController
         if($this->request->isPost())
         {
             $workerId = (int)$this->request->postParam('id_worker');
-            $this->database->deletestaff($workerId);
+            $this->databaseStaff->deletestaff($workerId);
             $this->redirect(self::DEFAULT_STAFF_ACTION, ['before' =>'deleted' ]);
         }
-        $this->view->render('deletestaff', ['worker' => $this->getWorkerData() ]);
+        $this->view->render('staff/deletestaff', ['worker' => $this->getWorkerData() ]);
 
     }
 
