@@ -17,6 +17,7 @@ class ObjectController
         $invoiceAction = ['allinvoice', 'newinvoice', 'showinvoice', 'editinvoice','deleteinvoice', 'printinvoice', 'downloadinvoice'];
         $staffAction = ['allstaff', 'addstaff', 'deletestaff', 'sendmail', 'showstaff', 'editstaff'];
         $hoursAction = ['hours', 'addhours', 'chceckhours', 'printsummaryhours'];
+        $companyAction = ['companydata','addcompanydata', 'editcompanydata'];
 
         switch($get)
         {
@@ -32,6 +33,9 @@ class ObjectController
     case (in_array($get,$invoiceAction)):
         (new InvoiceController($request))->run();  
         break;
+    case (in_array($get,$companyAction)):
+        (new CompanyController($request))->run();  
+        break;    
         }
     }
 

@@ -23,7 +23,7 @@
               <div class="row form-group">
                 <div class="col-lg-12 form-group">                   
                     <label class="control-label" for="inputNote">Treść notatki: </label>
-                    <textarea class="form-control" name="description" rows="10" id="field5"></textarea>
+                    <textarea class="form-control" name="description" rows="10" ></textarea>
                 </div>
               </div>
               <div class="form-group text-right">

@@ -1,3 +1,30 @@
+<script>
+        function countNettValue() {
+            let netto = parseFloat(document.getElementById("netPrice").value) || 0;
+            let quantity = parseFloat(document.getElementById("quantity").value) || 0;
+            let nettValue = quantity * netto ;
+            document.getElementById("netValue").value = nettValue.toFixed(2);
+
+            countVatValue();
+            countBrutt();
+        }
+
+        function countVatValue() {
+            let nettoValue = parseFloat(document.getElementById("netValue").value) || 0;
+            let vat = parseFloat(document.getElementById("VAT").value) || 0;
+            let vatValue = nettoValue * (vat / 100) ;
+            document.getElementById("vatValue").value = vatValue.toFixed(2);
+
+            countBrutt();
+        }
+        function countBrutt() {
+            let nettValue = parseFloat(document.getElementById("netValue").value) || 0;
+            let vatValue = parseFloat(document.getElementById("vatValue").value) || 0;
+            let brutto = nettValue + vatValue;
+            document.getElementById("brutPrice").value = brutto.toFixed(2);
+        }
+</script>
+
 <div class="templatemo-content-widget white-bg">
             <!-- PASEK NAWIGACJI -->
 <div class="templatemo-top-nav-container">
@@ -21,10 +48,6 @@
                     <input type="text" class="form-control" name="invoiceNumber"  value="<?php echo $invoiceNumber?>" required >                  
                 </div>
                 <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Data dokumentu</label>
-                    <input type="date" class="form-control" name="documentDate" required>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
                     <label>Data sprzedaży</label>
                     <input type="date" class="form-control" name="sellDate" required>                  
                 </div> 
@@ -32,19 +55,6 @@
                     <label>Miejsce sprzedaży</label>
                     <input type="text" class="form-control" name="sellPlace" required>                  
                 </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Numer konta bankowego</label>
-                    <input type="number" class="form-control" name="accNumber" required>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group"> 
-                  <label class="control-label templatemo-block">Waluta</label>                 
-                  <select class="form-control" name="current" required>
-                    <option value="PLN">PLN</option>
-                    <option value="EUR">EUR</option>  
-                    <option value="USD">USD</option>
-                    <option value="GBP">GBP</option>
-                  </select>
-                </div>
                 <div class="col-lg-6 col-md-6 form-group">                  
                     <label>Nazwa kontrachenta</label>
                     <input type="text" class="form-control" name="contractorName" required>                  
@@ -71,19 +81,42 @@
                 </div> 
                 <div class="col-lg-6 col-md-6 form-group">                  
                     <label>Ilość</label>
-                    <input type="number" class="form-control" name="quantity" required>                  
+                    <input type="number" id="quantity" class="form-control" name="quantity" oninput="countNettValue(); countVatValue();" required>                  
                 </div> 
                 <div class="col-lg-6 col-md-6 form-group">                  
                     <label>Cena netto</label>
-                    <input type="number" class="form-control" name="netPrice" required >                  
+                    <input type="number" class="form-control" id="netPrice" name="netPrice" oninput="countNettValue(); countVatValue();" required >                  
+                </div> 
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label>Wartość netto</label>
+                    <input type="number" class="form-control" id="netValue" name="netValue" oninput="countVatValue(); countBrutt();" readonly >                  
                 </div> 
                 <div class="col-lg-6 col-md-6 form-group">                  
                     <label>stawka VAT</label>
-                    <input type="number" class="form-control" name="VAT" value="23" required>                  
+                    <select class="form-control" name="VAT" id="VAT" oninput="countVatValue()" required>
+                    <option value="23">23%</option>
+                    <option value="8">8%</option>  
+                    <option value="5">5%</option>
+                  </select>              
+                </div> 
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label>Wartość VAT</label>
+                    <input type="number" class="form-control" id="vatValue" name="vatValue" oninput="countBrutt()" readonly >                  
                 </div> 
                 <div class="col-lg-6 col-md-6 form-group">                  
                     <label>Cena brutto</label>
-                    <input type="number" class="form-control" name="brutPrice" required>                  
+                    <input type="text" class="form-control" id="brutPrice" name="brutPrice" readonly>                  
+                </div> 
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label>Metoda płatności</label>
+                    <select class="form-control" name="paymentMethod" required>
+                    <option value="Przelew">Przelew</option>
+                    <option value="Gotówka">Gotówka</option>  
+                  </select>              
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label>Data płatności</label>
+                    <input type="date" class="form-control" name="payDate" required>                  
                 </div> 
               </div>
               <div class="form-group text-right">

@@ -16,9 +16,6 @@ use App\Database;
 
 class DatabaseInvoice extends Database
 {
-
-
-
     public function getInvoices(): array
     { 
         $query = "SELECT * FROM invoice";
@@ -66,11 +63,8 @@ class DatabaseInvoice extends Database
     public function newInvoice(array $data): void
     {
         $invoiceNumber = $this->conn->quote($data['invoice_number']);
-        $documentDate = $this->conn->quote($data['document_date']);
         $sellDate = $this->conn->quote($data['sell_date']);
         $sellPlace = $this->conn->quote($data['sell_place']);
-        $accNumber = $this->conn->quote($data['acc_number']);
-        $current = $this->conn->quote($data['current']);
         $contractorName = $this->conn->quote($data['contractor_name']);
         $nip = $this->conn->quote($data['NIP']);
         $contractorAdress = $this->conn->quote($data['contractor_adress']);
@@ -81,11 +75,15 @@ class DatabaseInvoice extends Database
         $netPrice = $this->conn->quote($data['net_price']);
         $vat = $this->conn->quote($data['VAT']);
         $brutPrice = $this->conn->quote($data['brut_price']);
+        $payDate = $this->conn->quote($data['pay_date']);
+        $paymentMethod = $this->conn->quote($data['payment_method']);
+        $netValue = $this->conn->quote($data['net_value']);
+        $vatValue = $this->conn->quote($data['vat_value']);
 
-        $query= "INSERT INTO invoice (invoice_number, document_date, sell_date, sell_place, acc_number, current, contractor_name,
-        NIP, contractor_adress, contractor_postcode, contractor_city, product, quantity, net_price, VAT, brut_price) 
-        VALUES($invoiceNumber, $documentDate, $sellDate, $sellPlace, $accNumber, $current, $contractorName, $nip, $contractorAdress, 
-        $contractorPostcode, $contractorCity, $product, $quantity, $netPrice, $vat, $brutPrice)";
+        $query= "INSERT INTO invoice (invoice_number, sell_date, sell_place, contractor_name,
+        NIP, contractor_adress, contractor_postcode, contractor_city, product, quantity, net_price, VAT, brut_price, pay_date, payment_method, net_value, vat_value) 
+        VALUES($invoiceNumber, $sellDate, $sellPlace, $contractorName, $nip, $contractorAdress, 
+        $contractorPostcode, $contractorCity, $product, $quantity, $netPrice, $vat, $brutPrice, $payDate, $paymentMethod, $netValue, $vatValue)";
 
         $exception = 'Nie udało się zapisać nowej fakury';
 
@@ -95,11 +93,8 @@ class DatabaseInvoice extends Database
     public function editinvoice(array $data, int $id)
     {
         $invoiceNumber = $this->conn->quote($data['invoice_number']);
-        $documentDate = $this->conn->quote($data['document_date']);
         $sellDate = $this->conn->quote($data['sell_date']);
         $sellPlace = $this->conn->quote($data['sell_place']);
-        $accNumber = $this->conn->quote($data['acc_number']);
-        $current = $this->conn->quote($data['current']);
         $contractorName = $this->conn->quote($data['contractor_name']);
         $nip = $this->conn->quote($data['NIP']);
         $contractorAdress = $this->conn->quote($data['contractor_adress']);
@@ -110,10 +105,15 @@ class DatabaseInvoice extends Database
         $netPrice = $this->conn->quote($data['net_price']);
         $vat = $this->conn->quote($data['VAT']);
         $brutPrice = $this->conn->quote($data['brut_price']);
+        $payDate = $this->conn->quote($data['pay_date']);
+        $paymentMethod = $this->conn->quote($data['payment_method']);
+        $netValue = $this->conn->quote($data['net_value']);
+        $vatValue = $this->conn->quote($data['vat_value']);
 
-        $query= "UPDATE invoice SET invoice_number=$invoiceNumber, document_date=$documentDate, sell_date=$sellDate, sell_place=$sellPlace, acc_number=$accNumber,
-                current=$current, contractor_name=$contractorName,NIP=$nip, contractor_adress=$contractorAdress, contractor_postcode=$contractorPostcode, 
-                contractor_city=$contractorCity, product=$product, quantity=$quantity, net_price=$netPrice, VAT=$vat, brut_price=$brutPrice 
+        $query= "UPDATE invoice SET invoice_number=$invoiceNumber, sell_date=$sellDate, sell_place=$sellPlace, 
+                contractor_name=$contractorName,NIP=$nip, contractor_adress=$contractorAdress, contractor_postcode=$contractorPostcode, 
+                contractor_city=$contractorCity, product=$product, quantity=$quantity, net_price=$netPrice, VAT=$vat, brut_price=$brutPrice,
+                pay_date=$payDate, payment_method=$paymentMethod, net_value=$netValue, vat_value=$vatValue 
                 WHERE id_invoice=$id";
         
         $exception = 'Nie udało się zedytować danych faktury';
@@ -130,28 +130,26 @@ class DatabaseInvoice extends Database
         $this->dbExec($query, $exception);
     }
 
-    public function quoteInvoiceData(array $data)
-    {
-        return  [
-        $invoiceNumber = $this->conn->quote($data['invoice_number']),
-        $documentDate = $this->conn->quote($data['document_date']),
-        $sellDate = $this->conn->quote($data['sell_date']),
-        $sellPlace = $this->conn->quote($data['sell_place']),
-        $accNumber = $this->conn->quote($data['acc_number']),
-        $current = $this->conn->quote($data['current']),
-        $contractorName = $this->conn->quote($data['contractor_name']),
-        $nip = $this->conn->quote($data['NIP']),
-        $contractorAdress = $this->conn->quote($data['contractor_adress']),
-        $contractorPostcode = $this->conn->quote($data['contractor_postcode']),
-        $contractorCity = $this->conn->quote($data['contractor_city']),
-        $product = $this->conn->quote($data['product']),
-        $quantity = $this->conn->quote($data['quantity']),
-        $netPrice = $this->conn->quote($data['net_price']),
-        $vat = $this->conn->quote($data['VAT']),
-        $brutPrice = $this->conn->quote($data['brut_price'])
-        ];
+    // public function quoteInvoiceData(array $data)
+    // {
+    //     return  [
+    //     $invoiceNumber = $this->conn->quote($data['invoice_number']),
+    //     $documentDate = $this->conn->quote($data['document_date']),
+    //     $sellDate = $this->conn->quote($data['sell_date']),
+    //     $sellPlace = $this->conn->quote($data['sell_place']),
+    //     $contractorName = $this->conn->quote($data['contractor_name']),
+    //     $nip = $this->conn->quote($data['NIP']),
+    //     $contractorAdress = $this->conn->quote($data['contractor_adress']),
+    //     $contractorPostcode = $this->conn->quote($data['contractor_postcode']),
+    //     $contractorCity = $this->conn->quote($data['contractor_city']),
+    //     $product = $this->conn->quote($data['product']),
+    //     $quantity = $this->conn->quote($data['quantity']),
+    //     $netPrice = $this->conn->quote($data['net_price']),
+    //     $vat = $this->conn->quote($data['VAT']),
+    //     $brutPrice = $this->conn->quote($data['brut_price'])
+    //     ];
 
-    }
+    // }
 
 
 }

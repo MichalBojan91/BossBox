@@ -19,8 +19,6 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use App\SendMail;
 
-
-
 class StaffController extends AbstractController
 {
     private const DEFAULT_STAFF_ACTION = 'allstaff';

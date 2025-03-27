@@ -1,89 +1,72 @@
 <!DOCTYPE html>
 <html lang="pl">
+<?php $invoice = $params['invoice'] ?? null;?>
+<?php $company = $params['company'] ?? null;?>
     <head>
         <meta charset="utf-8">
-        <title>faktura</title>
+        <title>Faktura: <?php echo $invoice['invoice_number']?></title>
         <link rel="stylesheet" type="text/css" href="meh.css">
     </head>
-    <?php dump($params); ?>
     <body>
-
         <div id="Content">
             <div>
                 <div id="div-1b">
-                    <p><b>Faktura</b></p>
+                    <p><b>Faktura <?php echo $invoice['invoice_number']?></b></p>
                 </div>
-                
-                <div id="div-1d">
-                    <p><b>Nr 1/01/2013</b></p>
-                </div>
-
                 <div id="div-1c">
-                    Sprzedawca: <b>Adam Nowak</b> <br>
-                    Adres: <b>ul. Nowoczesna 125, 12-345 Warszawa</b><br>
-                    NIP: <b>987-65-43-123</b>
-                    
+                    Data sprzedaży: <b><?php echo $invoice['sell_date']?></b><br>
                 </div>
-
+                <br>
+                <div id="div-1c">
+                    Sprzedawca: <b><?php echo $company['company_name']?></b> <br>
+                    Adres: <b><?php echo $company['company_adress'].' '.$company['company_postcode'].' '.$company['company_city'] ?></b><br>
+                    NIP: <b><?php echo $company['company_nip']?></b><br><br>
+                </div>
                 <div id="div-1e">
-                    Nabywca: <b>Krzysztok Niewiadomski</b><br>
-                    Adres: <b>Księgowa 20, 12-345 Warszawa</b><br>
-                    NIP: 789-56-43-123
+                    Nabywca: <b><?php echo $invoice['contractor_name']?></b><br>
+                    Adres: <b><?php echo $invoice['contractor_adress'].' '.$invoice['contractor_postcode'].' '.$invoice['contractor_city']?></b><br>
+                    NIP: <b><?php echo $invoice['NIP']?></b><br><br>
                 </div>
-
                 <div id="div-1f">
-                    Sposob płatności: <b>Przelew</b>
-                    Termin płatności: <b>2013-01-24</b><br>
-                    Bank: <b>mBank</b>
-                    Numer konta: <b>78 140 0000 0000 0000 1234 5678</b>
+                    Sposob płatności: <b><?php echo $invoice['payment_method']?></b>
+                    Termin płatności: <b><?php echo $invoice['pay_date']?></b><br>
+                    Numer konta: <b><?php echo $company['company_bank_acc']?></b>
                 </div>
-                
             </div>
-
-        
         <div>
         <br>
         <table border="1" id="tabela">
             <tr style="background-color: #bababa;">
                 <th>Lp.</th>
-                <th>Nazwa</th>
-                <th>Ilość</th>
-                <th>Jm</th>
-                <th>Cena netto</th>
-                <th>Wartość netto</th>
-                <th>Stawka VAT</th>
-                <th>Kwota VAT</th>
-                <th>Wartość brutto</th>
+                <th>Nazwa </th>
+                <th>Ilość&nbsp;</th>
+                <th>Cena netto&nbsp;</th>
+                <th>Wartość netto&nbsp;</th>
+                <th>Stawka VAT&nbsp;</th>
+                <th>Kwota VAT&nbsp;</th>
+                <th>Wartość brutto&nbsp;</th>
             </tr>
             <tr>
                 <td>1</td>
-                <td>Usługa graficzna</td>
-                <td></td>
-                <td>1</td>
-                <td></td>
-                <td>123,00</td>
-                <td>123,00</td>
-                <td>23%</td>
-                <td>28,29</td>
-                <td>151,29</td>                
+                <td><?php echo $invoice['product']?>&nbsp;&nbsp;</td>
+                <td><?php echo $invoice['quantity']?></td>
+                <td><?php echo $invoice['net_price']?></td>
+                <td><?php echo $invoice['net_value']?></td>
+                <td><?php echo $invoice['VAT']?></td>
+                <td><?php echo $invoice['vat_value']?></td>
+                <td><?php echo $invoice['brut_price']?></td>
             </tr>
-
-        </table>
-        
+        </table><br>
         </div>
-        
             <div id="div-sum">
-                <p>Razem do zapłaty: <b>151,29</b></p>
+                <p>Razem do zapłaty: <b><?php echo $invoice['brut_price']?></b></p>
             </div>
-
-            <div id="div-odb">
-                <p>Podpis odbiorcy</p>
+            <div >
+                <p>Podpis odbiorcy</p><br><br>
             </div>
-
             <div id="div-wys">
                 <p>Podpis wystawiającego</p>
             </div>
-            
        </div>
     </body>
 </html>

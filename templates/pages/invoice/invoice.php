@@ -47,7 +47,6 @@
           </div>
         </div>            
 </div>
-  
 <!-- TABELA         -->
 <div class="templatemo-content-widget no-padding">
     <div class="panel panel-default table-responsive">
@@ -57,24 +56,37 @@
                 <tr>
                     <td width=40 >Nr</td>
                     <td width=100>Numer dokumentu</td>
-                    <td width=100>Data wystawienia</td>
+                    <td width=100>Data sprzedaży</td>
                     <td width=300>Kontrachent</td>
                     <td width=150>NIP</td>
                     <td width=150>Produkt/usługa</td>
                     <td width=100>Kwota brutto</td>
+                    <td width=100>Dni do zapłaty</td>
                     <td width=200>Opcje</td>
                 </tr>
             </thead>
             <tbody>
                <?php foreach($params['invoices'] ?? [] as $invoice): ?>
                 <tr>
-                    <td><?php echo ($invoice['id_invoice']); ?>   </td>
-                    <td><?php echo ($invoice['invoice_number']); ?>      </td>
-                    <td><?php echo ($invoice['document_date']); ?>      </td>
-                    <td><?php echo ($invoice['contractor_name']); ?>      </td>
-                    <td><?php echo ($invoice['NIP']); ?>      </td>
-                    <td><?php echo ($invoice['product']); ?>      </td>
-                    <td><?php echo ($invoice['brut_price']); ?>      </td>
+                    <td><?php echo ($invoice['id_invoice']); ?></td>
+                    <td><?php echo ($invoice['invoice_number']);?></td>
+                    <td><?php echo ($invoice['sell_date']);?></td>
+                    <td><?php echo ($invoice['contractor_name']);?></td>
+                    <td><?php echo ($invoice['NIP']);?></td>
+                    <td><?php echo ($invoice['product']);?></td>
+                    <td><?php echo ($invoice['brut_price']);?></td>
+                    <td> 
+                        <?php $payDate = new DateTime($invoice['pay_date']);
+                              $today = new DateTime();
+                              $diff = $today->diff($payDate);
+                              $daysToPay = $diff->days; ?>
+                        <?php if($payDate>$today):?>
+                            <span style="color: green;"><?php echo $daysToPay ?></span>
+                        <?php endif;?>  
+                        <?php if($payDate<$today):?>
+                            <span style="color: red;"><?php echo '-'.$daysToPay ?></span>
+                        <?php endif;?>  
+                    </td>
                     <td><a href="/?action=showinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button>Szczegóły</button></a>
                     <a href="/?action=deleteinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button>Usuń</button></a>
                     </td>

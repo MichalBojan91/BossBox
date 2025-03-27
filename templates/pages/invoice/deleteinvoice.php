@@ -13,73 +13,64 @@
 <?php $invoice = $params['invoice'] ?? null;?>
 <?php if($invoice) : ?>
         <div class="templatemo-content-widget no-padding">
-        <h2 class="margin-bottom-10">Faktura nr:<?php echo $invoice['invoice_number'] ?></h2>
-            <div class="row form-group">
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Numer faktury</label>
-                    <p> <?php echo $invoice['invoice_number']?> </p>                 
+    <body>
+        <div id="Content">
+            <div>
+                <div id="div-1b">
+                    <p><b>Faktura</b></p>
                 </div>
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Data dokumentu</label>
-                    <p> <?php echo $invoice['document_date']?> </p>                
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Data sprzedaży</label>
-                    <p> <?php echo $invoice['sell_date']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Miejsce sprzedaży</label>
-                    <p> <?php echo $invoice['sell_place']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Numer konta bankowego</label>
-                    <p> <?php echo $invoice['acc_number']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group"> 
-                  <label class="control-label templatemo-block">Waluta</label>                 
-                  <p> <?php echo $invoice['current']?> </p>
+                <div id="div-1d">
+                    <p><b><?php echo $invoice['invoice_number']?></b></p>
                 </div>
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Nazwa kontrachenta</label>
-                    <p> <?php echo $invoice['contractor_name']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>NIP</label>
-                    <p> <?php echo $invoice['NIP']?> </p>                 
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Adres(ulica)</label>
-                    <p> <?php echo $invoice['contractor_adress']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Kod pocztowy</label>
-                    <p> <?php echo $invoice['contractor_postcode']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Miasto</label>
-                    <p> <?php echo $invoice['contractor_city']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Nazwa produktu/usługi</label>
-                    <p> <?php echo $invoice['product']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Ilość</label>
-                    <p> <?php echo $invoice['quantity']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Cena netto</label>
-                    <p> <?php echo $invoice['net_price']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>stawka VAT</label>
-                    <p> <?php echo $invoice['VAT']?> </p>                  
-                </div> 
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label>Cena brutto</label>
-                    <p> <?php echo $invoice['brut_price']?> </p>                  
-                </div> 
-              </div>
+                <div id="div-1c">
+                    Data sprzedaży: <b><?php echo $invoice['sell_date']?></b><br>
+                </div>
+                <br>
+                <div id="div-1c">
+                    Sprzedawca: <b>Adam Nowak</b> <br>
+                    Adres: <b>ul. Nowoczesna 125, 12-345 Warszawa</b><br>
+                    NIP: <b>987-65-43-123</b><br><br>
+                </div>
+                <div id="div-1e">
+                    Nabywca: <b><?php echo $invoice['contractor_name']?></b><br>
+                    Adres: <b><?php echo $invoice['contractor_adress'].' '.$invoice['contractor_postcode'].' '.$invoice['contractor_city']?></b><br>
+                    NIP: <b><?php echo $invoice['NIP']?></b><br><br>
+                </div>
+                <div id="div-1f">
+                    Sposob płatności: <b><?php echo $invoice['payment_method']?></b>
+                    Termin płatności: <b><?php echo $invoice['pay_date']?></b><br>
+                    
+                    Numer konta: <b>78 140 0000 0000 0000 1234 5678</b>
+                </div>
+            </div>
+        <div>
+        <br>
+        <table border="1" id="tabela">
+            <tr style="background-color: #bababa;">
+                <th>Lp.</th>
+                <th>Nazwa </th>
+                <th>Ilość&nbsp;</th>
+                <th>Cena netto&nbsp;</th>
+                <th>Wartość netto&nbsp;</th>
+                <th>Stawka VAT&nbsp;</th>
+                <th>Kwota VAT&nbsp;</th>
+                <th>Wartość brutto&nbsp;</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><?php echo $invoice['product']?>&nbsp;&nbsp;</td>
+                <td><?php echo $invoice['quantity']?></td>
+                <td><?php echo $invoice['net_price']?></td>
+                <td><?php echo $invoice['net_value']?></td>
+                <td><?php echo $invoice['VAT']?></td>
+                <td><?php echo $invoice['vat_value']?></td>
+                <td><?php echo $invoice['brut_price']?></td>
+            </tr>
+        </table><br>
+        </div>
+            <div id="div-sum">
+                <p>Razem do zapłaty: <b><?php echo $invoice['brut_price']?></b></p>
+            </div>
             <form method="post" action="/?action=deleteinvoice">
                 <input type="hidden" name="id_invoice" value="<?php echo $invoice['id_invoice'] ?>" >
               <div class="form-group text-right">

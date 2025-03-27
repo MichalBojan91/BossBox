@@ -6,12 +6,7 @@ namespace App;
 
 require_once("src/Database.php");
 
-use App\Exception\StorageException;
-use App\Exception\ConfigurationException;
-use App\Exception\NotFoundException;
 use PDO;
-use PDOException;
-use Throwable;
 use App\Database;
 
 class DatabaseStaff extends Database

@@ -11,9 +11,10 @@ require_once("src/Controller/AbstractController.php");
 use App\DatabaseInvoice;
 use App\Request;
 use App\Controller\AbstractController;
-use App\Exception\AppException;
-use App\Exception\ConfigurationException;
 use App\Exception\NotFoundException;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use DateTime;
 
 
 class InvoiceController extends AbstractController
@@ -21,80 +22,99 @@ class InvoiceController extends AbstractController
     const DEFAULT_INVOICE_ACTION = 'allinvoice';
 
     protected DatabaseInvoice $databaseInvoice;
+    protected CompanyController $companyController;
 
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->databaseInvoice = new DatabaseInvoice(self::$configuration['db']);
+        $this->companyController = new CompanyController($request);
     }
 
-    public function allinvoiceAction():void
+    public function allinvoiceAction(): void
     {
         $invoices = $this->databaseInvoice->getInvoices();
 
-        $this->view->render('invoice/invoice', ['invoices' => $invoices]);
+        $this->view->render('invoice/invoice', ['invoices' => $invoices,
+                 'before' => $this->request->getParam('before'),
+                 'error' => $this->request->getParam('error')]);
     }
 
     public function newinvoiceAction(): void
     {
-        if($this->request->hasPost()) {
-            
+        if ($this->request->hasPost()) {
+
             $this->databaseInvoice->newInvoice($this->getPostInvoiceData());
 
-            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' =>'created' ]);  //przeniesienie i przekazanie parametru zeby wyświetlić info
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'created']);  //przeniesienie i przekazanie parametru zeby wyświetlić info
         }
-        $this->view->render('invoice/newinvoice', ['invoiceNumber'=>$this->databaseInvoice->getInvoiceNumber()]);
+        $this->view->render('invoice/newinvoice', ['invoiceNumber' => $this->databaseInvoice->getInvoiceNumber()]);
     }
 
     public function showinvoiceAction(): void
     {
-        $this->view->render('invoice/showinvoice', ['invoice' => $this->getInvoiceData()]);
-
-    } 
+        $this->view->render('invoice/showinvoice', ['invoice' => $this->getInvoiceData(), 'company' => $this->companyController->getCompanyData()]);
+    }
 
     public function editinvoiceAction(): void
     {
-            if($this->request->hasPost()) {
-                $idInvoice = (int)$this->request->postParam('id_invoice');
-                $this->databaseInvoice->editinvoice($this->getPostInvoiceData(), $idInvoice);
+        if ($this->request->hasPost()) {
+            $idInvoice = (int)$this->request->postParam('id_invoice');
+            $this->databaseInvoice->editinvoice($this->getPostInvoiceData(), $idInvoice);
 
-            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' =>'edited' ]);  //przeniesienie i przekazanie parametru zeby wyświetlić info
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'edited']);  //przeniesienie i przekazanie parametru zeby wyświetlić info
         }
-        $this->view->render('invoice/editinvoice', ['invoice'=>$this->getInvoiceData()]);
+        $this->view->render('invoice/editinvoice', ['invoice' => $this->getInvoiceData()]);
     }
 
     public function deleteinvoiceAction(): void
     {
-        if($this->request->hasPost()) {
+        if ($this->request->hasPost()) {
             $idInvoice = (int)$this->request->postParam('id_invoice');
             $this->databaseInvoice->deleteinvoice($idInvoice);
 
-        $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before'=>'deleted']);    
-
-        }    
-    $this->view->render('invoice/deleteinvoice', ['invoice'=>$this->getInvoiceData()]);        
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'deleted']);
+        }
+        $this->view->render('invoice/deleteinvoice', ['invoice' => $this->getInvoiceData()]);
     }
 
     public function downloadinvoiceAction(): void
     {
-        
+        ob_start();
+        $data = ['invoice' => $this->getInvoiceData(), 'company' => $this->companyController->getCompanyData() ];   //UWAGA!
+        $params = $this->view->escape($data);
+        require_once("templates/pages/invoice/downloadinvoice.php");
+        $html = ob_get_clean();
+        file_put_contents("invoice.html", $params);
+                
+        $title = $title = preg_replace('/[\/]/', '.', $params['invoice']['invoice_number']);
+       
+        $options = new Options();
+        $options->set('defaultFont', 'DejaVu Sans Mono');
 
-        $this->view->render('invoice/downloadinvoice', ['invoice'=> $this->getInvoiceData(), 'invoiceNumber'=>$this->databaseInvoice->getInvoiceNumber()]);
-    
+        $dompdf = new Dompdf($options);
+        
+        $dompdf->loadHtml($html);
+                
+        $dompdf->setPaper('A4');
+
+        $dompdf->render();
+
+        $dompdf->stream($title, ['Attachment' =>0]);      
     }
 
     public function getInvoiceData(): array
     {
-       $invoiceId = (int)$this->request->getParam('id'); 
-       if(!$invoiceId){
-        $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' =>'missingInvoiceId' ]);
-       } 
-       try{
-        $invoice = $this->databaseInvoice->getInvoice($invoiceId);
-       }catch(NotFoundException $e){
-        $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' =>'invoiceNotFound' ]);
-       }
-       return $invoice;
+        $invoiceId = (int)$this->request->getParam('id');
+        if (!$invoiceId) {
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' => 'missingInvoiceId']);
+        }
+        try {
+            $invoice = $this->databaseInvoice->getInvoice($invoiceId);
+        } catch (NotFoundException $e) {
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' => 'invoiceNotFound']);
+        }
+        return $invoice;
     }
 
     public function getPostInvoiceData(): array
@@ -104,8 +124,6 @@ class InvoiceController extends AbstractController
             'document_date' => $this->request->postParam('documentDate'),
             'sell_date' => $this->request->postParam('sellDate'),
             'sell_place' => $this->request->postParam('sellPlace'),
-            'acc_number' => $this->request->postParam('accNumber'),
-            'current' => $this->request->postParam('current'),
             'contractor_name' => $this->request->postParam('contractorName'),
             'NIP' => $this->request->postParam('NIP'),
             'contractor_adress' => $this->request->postParam('contractorAdress'),
@@ -115,8 +133,11 @@ class InvoiceController extends AbstractController
             'quantity' => $this->request->postParam('quantity'),
             'net_price' => $this->request->postParam('netPrice'),
             'VAT' => $this->request->postParam('VAT'),
-            'brut_price' => $this->request->postParam('brutPrice')
+            'brut_price' => $this->request->postParam('brutPrice'),
+            'pay_date' => $this->request->postParam('payDate'),
+            'payment_method' => $this->request->postParam('paymentMethod'),
+            'net_value' => $this->request->postParam('netValue'),
+            'vat_value' => $this->request->postParam('vatValue')
         ];
     }
-
 }
