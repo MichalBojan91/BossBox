@@ -118,6 +118,13 @@
                     <label>Data płatności</label>
                     <input type="date" class="form-control" name="payDate" required>                  
                 </div> 
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label>Status płatności</label>
+                    <select class="form-control" name="payConfirm" required>
+                    <option value="0" selected>Nieopłacona </option>
+                    <option value="1">Opłacona</option>  
+                  </select>                 
+                </div> 
               </div>
               <div class="form-group text-right">
                 <button type="submit" class="templatemo-blue-button">Zapisz fakturę</button>

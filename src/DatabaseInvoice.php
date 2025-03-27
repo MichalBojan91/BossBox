@@ -79,11 +79,12 @@ class DatabaseInvoice extends Database
         $paymentMethod = $this->conn->quote($data['payment_method']);
         $netValue = $this->conn->quote($data['net_value']);
         $vatValue = $this->conn->quote($data['vat_value']);
+        $payConfirm = $this->conn->quote($data['pay_confirm']);
 
         $query= "INSERT INTO invoice (invoice_number, sell_date, sell_place, contractor_name,
-        NIP, contractor_adress, contractor_postcode, contractor_city, product, quantity, net_price, VAT, brut_price, pay_date, payment_method, net_value, vat_value) 
+        NIP, contractor_adress, contractor_postcode, contractor_city, product, quantity, net_price, VAT, brut_price, pay_date, payment_method, net_value, vat_value, pay_confirm) 
         VALUES($invoiceNumber, $sellDate, $sellPlace, $contractorName, $nip, $contractorAdress, 
-        $contractorPostcode, $contractorCity, $product, $quantity, $netPrice, $vat, $brutPrice, $payDate, $paymentMethod, $netValue, $vatValue)";
+        $contractorPostcode, $contractorCity, $product, $quantity, $netPrice, $vat, $brutPrice, $payDate, $paymentMethod, $netValue, $vatValue, $payConfirm)";
 
         $exception = 'Nie udało się zapisać nowej fakury';
 
@@ -109,11 +110,12 @@ class DatabaseInvoice extends Database
         $paymentMethod = $this->conn->quote($data['payment_method']);
         $netValue = $this->conn->quote($data['net_value']);
         $vatValue = $this->conn->quote($data['vat_value']);
+        $payConfirm = $this->conn->quote($data['pay_confirm']);
 
         $query= "UPDATE invoice SET invoice_number=$invoiceNumber, sell_date=$sellDate, sell_place=$sellPlace, 
                 contractor_name=$contractorName,NIP=$nip, contractor_adress=$contractorAdress, contractor_postcode=$contractorPostcode, 
                 contractor_city=$contractorCity, product=$product, quantity=$quantity, net_price=$netPrice, VAT=$vat, brut_price=$brutPrice,
-                pay_date=$payDate, payment_method=$paymentMethod, net_value=$netValue, vat_value=$vatValue 
+                pay_date=$payDate, payment_method=$paymentMethod, net_value=$netValue, vat_value=$vatValue, pay_confirm=$payConfirm 
                 WHERE id_invoice=$id";
         
         $exception = 'Nie udało się zedytować danych faktury';
@@ -121,11 +123,19 @@ class DatabaseInvoice extends Database
         $this->dbExec($query, $exception);   
     }
 
-    public function deleteinvoice(int $id)
+    public function deleteinvoice(int $id):void
     {
         $query = "DELETE FROM invoice WHERE id_invoice=$id";
 
         $exception = 'Nie udało się usunąć faktury';
+
+        $this->dbExec($query, $exception);
+    }
+
+    public function payConfirm(int $id):void
+    {
+        $query = "UPDATE invoice SET pay_confirm=1 WHERE id_invoice=$id";
+        $exception = "Nie udało się potwierdzić płatności";
 
         $this->dbExec($query, $exception);
     }

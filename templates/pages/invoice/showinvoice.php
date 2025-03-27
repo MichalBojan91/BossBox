@@ -13,6 +13,7 @@
         <div class="templatemo-content-widget no-padding">
         <?php $invoice = $params['invoice'] ?? null;?>
         <?php $company = $params['company'] ?? null;?>
+        <?php dump($invoice); ?>
     <body>
 
         <div id="Content">
@@ -75,6 +76,7 @@
                 <h2><p>Razem do zapłaty: <b><?php echo $invoice['brut_price']?></b></p></h2>
             </div>
               <div class="form-group text-right">
+               <a href="/?action=payconfirm&id=<?php echo $invoice['id_invoice']?>"> <button class="templatemo-blue-button">Faktura opłacona</button></a>
                <a href="/?action=editinvoice&id=<?php echo $invoice['id_invoice']?>"> <button class="templatemo-blue-button">Edytuj dane faktury</button></a>
                <a href="/?action=downloadinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button class="templatemo-blue-button">Pobierz/Drukuj</button></a>
               </div> 

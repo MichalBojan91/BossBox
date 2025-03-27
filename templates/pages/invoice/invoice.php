@@ -13,6 +13,9 @@
         case 'deleted':
             echo 'Dane faktury usunięte z bazy';        
             break;
+        case 'payconfirmed':
+            echo 'Zmieniono status płatności';        
+            break;    
     }
     ?>
    </h3>
@@ -48,13 +51,13 @@
         </div>            
 </div>
 <!-- TABELA         -->
+ <?php //dump($params);?>
 <div class="templatemo-content-widget no-padding">
     <div class="panel panel-default table-responsive">
     <div class="panel-heading"><h2>Lista faktur</h2></div>
         <table class="table table-striped table-bordered templatemo-user-table">
             <thead>
                 <tr>
-                    <td width=40 >Nr</td>
                     <td width=100>Numer dokumentu</td>
                     <td width=100>Data sprzedaży</td>
                     <td width=300>Kontrachent</td>
@@ -68,7 +71,6 @@
             <tbody>
                <?php foreach($params['invoices'] ?? [] as $invoice): ?>
                 <tr>
-                    <td><?php echo ($invoice['id_invoice']); ?></td>
                     <td><?php echo ($invoice['invoice_number']);?></td>
                     <td><?php echo ($invoice['sell_date']);?></td>
                     <td><?php echo ($invoice['contractor_name']);?></td>
@@ -76,15 +78,19 @@
                     <td><?php echo ($invoice['product']);?></td>
                     <td><?php echo ($invoice['brut_price']);?></td>
                     <td> 
-                        <?php $payDate = new DateTime($invoice['pay_date']);
+                        <?php if($invoice['pay_confirm'] ?? null):?>
+                            <span style="color: green;">Faktura opłacona</span>
+                        <?php else: ?>
+                            <?php $payDate = new DateTime($invoice['pay_date']);
                               $today = new DateTime();
                               $diff = $today->diff($payDate);
-                              $daysToPay = $diff->days; ?>
+                              $daysToPay = $diff->days+1; ?>
                         <?php if($payDate>$today):?>
                             <span style="color: green;"><?php echo $daysToPay ?></span>
                         <?php endif;?>  
                         <?php if($payDate<$today):?>
                             <span style="color: red;"><?php echo '-'.$daysToPay ?></span>
+                        <?php endif;?>
                         <?php endif;?>  
                     </td>
                     <td><a href="/?action=showinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button>Szczegóły</button></a>

@@ -103,11 +103,23 @@ class InvoiceController extends AbstractController
         $dompdf->stream($title, ['Attachment' =>0]);      
     }
 
+    public function payConfirmAction():void
+    {
+        $invoiceId = (int)$this->request->getParam('id');
+        if (!$invoiceId) {
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' => 'missingInvoiceId']);//użyj tego do zabezpieczania przy wpisywaniu z ręki w get
+        }
+        else{
+            $this->databaseInvoice->payConfirm($invoiceId);
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'payconfirmed']);
+        }
+    }
+
     public function getInvoiceData(): array
     {
         $invoiceId = (int)$this->request->getParam('id');
         if (!$invoiceId) {
-            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' => 'missingInvoiceId']);
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' => 'missingInvoiceId']);//użyj tego do zabezpieczania przy wpisywaniu z ręki w get
         }
         try {
             $invoice = $this->databaseInvoice->getInvoice($invoiceId);
@@ -137,7 +149,8 @@ class InvoiceController extends AbstractController
             'pay_date' => $this->request->postParam('payDate'),
             'payment_method' => $this->request->postParam('paymentMethod'),
             'net_value' => $this->request->postParam('netValue'),
-            'vat_value' => $this->request->postParam('vatValue')
+            'vat_value' => $this->request->postParam('vatValue'), 
+            'pay_confirm' => $this->request->postParam('payConfirm')
         ];
     }
 }
