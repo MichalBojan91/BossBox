@@ -15,7 +15,11 @@
             break;
         case 'payconfirmed':
             echo 'Zmieniono status płatności';        
-            break;    
+            break; 
+        case 'invoicesent':
+            echo 'Faktura wysłana do klienta';        
+            break; 
+
     }
     ?>
    </h3>
@@ -27,7 +31,7 @@
     switch($params['error'])
     {   
         case 'missingInvoiceId':
-            echo 'Brak danych, spróbuj ponownie';
+            echo 'Brak danych, spróbuj ponowniewweewe';
             break;
         case 'invoiceNotFound':
             echo 'Brak danych, spróbuj ponownie';

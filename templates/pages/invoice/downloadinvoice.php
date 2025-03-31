@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <title>Faktura: <?php echo $invoice['invoice_number']?></title>
-        <link rel="stylesheet" type="text/css" href="meh.css">
+       
     </head>
     <body>
         <div id="Content">
@@ -35,7 +35,7 @@
             </div>
         <div>
         <br>
-        <table border="1" id="tabela">
+        <table border="1">
             <tr style="background-color: #bababa;">
                 <th>Lp.</th>
                 <th>Nazwa </th>

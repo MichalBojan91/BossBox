@@ -46,7 +46,7 @@ class InvoiceController extends AbstractController
 
             $this->databaseInvoice->newInvoice($this->getPostInvoiceData());
 
-            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'created']);  //przeniesienie i przekazanie parametru zeby wyświetlić info
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'created']);  
         }
         $this->view->render('invoice/newinvoice', ['invoiceNumber' => $this->databaseInvoice->getInvoiceNumber()]);
     }
@@ -62,7 +62,7 @@ class InvoiceController extends AbstractController
             $idInvoice = (int)$this->request->postParam('id_invoice');
             $this->databaseInvoice->editinvoice($this->getPostInvoiceData(), $idInvoice);
 
-            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'edited']);  //przeniesienie i przekazanie parametru zeby wyświetlić info
+            $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'edited']);  
         }
         $this->view->render('invoice/editinvoice', ['invoice' => $this->getInvoiceData()]);
     }
@@ -78,16 +78,15 @@ class InvoiceController extends AbstractController
         $this->view->render('invoice/deleteinvoice', ['invoice' => $this->getInvoiceData()]);
     }
 
-    public function downloadinvoiceAction(): void
+    public function downloadinvoiceAction()
     {
         ob_start();
-        $data = ['invoice' => $this->getInvoiceData(), 'company' => $this->companyController->getCompanyData() ];   //UWAGA!
+        $data = ['invoice' => $this->getInvoiceData(), 'company' => $this->companyController->getCompanyData()];   
         $params = $this->view->escape($data);
         require_once("templates/pages/invoice/downloadinvoice.php");
         $html = ob_get_clean();
-        file_put_contents("invoice.html", $params);
                 
-        $title = $title = preg_replace('/[\/]/', '.', $params['invoice']['invoice_number']);
+        $title = preg_replace('/[\/]/', '.', $params['invoice']['invoice_number']);
        
         $options = new Options();
         $options->set('defaultFont', 'DejaVu Sans Mono');
@@ -100,8 +99,33 @@ class InvoiceController extends AbstractController
 
         $dompdf->render();
 
-        $dompdf->stream($title, ['Attachment' =>0]);      
+        $dompdf->stream($title);      
     }
+
+    public function generateInvoicePdf(int $invoiceId)
+    {
+        ob_start();
+        $data = ['invoice' => $this->getInvoiceData($invoiceId), 'company' => $this->companyController->getCompanyData()];   
+        $params = $this->view->escape($data);
+        require_once("templates/pages/invoice/downloadinvoice.php");
+        $html = ob_get_clean();
+                
+        $title = preg_replace('/[\/]/', '.', $params['invoice']['invoice_number']);
+       
+        $options = new Options();
+        $options->set('defaultFont', 'DejaVu Sans Mono');
+
+        $dompdf = new Dompdf($options);
+        
+        $dompdf->loadHtml($html);
+                
+        $dompdf->setPaper('A4');
+
+        $dompdf->render();
+
+        return $dompdf->output();
+    }
+
 
     public function payConfirmAction():void
     {
@@ -115,9 +139,11 @@ class InvoiceController extends AbstractController
         }
     }
 
-    public function getInvoiceData(): array
+    public function getInvoiceData(?int $invoiceId=null ): array
     {
-        $invoiceId = (int)$this->request->getParam('id');
+        if (!$invoiceId) {
+            $invoiceId = (int)$this->request->getParam('id'); // Pobranie ID z GET, jeśli nie przekazano
+        }
         if (!$invoiceId) {
             $this->redirect(self::DEFAULT_INVOICE_ACTION, ['error' => 'missingInvoiceId']);//użyj tego do zabezpieczania przy wpisywaniu z ręki w get
         }
@@ -128,6 +154,28 @@ class InvoiceController extends AbstractController
         }
         return $invoice;
     }
+
+    public function sendInvoiceAction():void
+    {
+        if ($this->request->isPost()) {
+            $data = [
+                'email' => $this->request->postParam('email'),
+                'subject' => $this->request->postParam('subject'),
+                'body' => $this->request->postParam('body'),
+                'invoiceId' => (int)$this->request->postParam('invoiceId'),
+                'invoiceNumber' => $this->request->postParam('invoiceNumber')
+            ];
+
+        $invoicePdf = $this->generateInvoicePdf($data['invoiceId']);
+        $invoiceNumber = preg_replace('/[\/]/', '.', $data['invoiceNumber'] ); // Usunięcie problematycznych znaków
+
+        $this->sendMail->SendMail($data, $invoicePdf, $invoiceNumber);
+        $this->redirect(self::DEFAULT_INVOICE_ACTION, ['before' => 'invoicesent']);
+
+    }
+        $this->view->render('invoice/sendinvoice', ['invoice' => $this->getInvoiceData(), 'company' => $this->companyController->getCompanyData()]);
+    }
+
 
     public function getPostInvoiceData(): array
     {

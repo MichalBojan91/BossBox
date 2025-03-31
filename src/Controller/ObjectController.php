@@ -14,7 +14,7 @@ class ObjectController
     public static function ObjectSwitch(?string $get, $request):void
     {
         $notesAction = ['allnotes', 'createnote', 'deletenote', 'editnote', 'shownote'];
-        $invoiceAction = ['allinvoice', 'newinvoice', 'showinvoice', 'editinvoice','deleteinvoice', 'printinvoice', 'downloadinvoice', 'payconfirm'];
+        $invoiceAction = ['allinvoice', 'newinvoice', 'showinvoice', 'editinvoice','deleteinvoice', 'printinvoice', 'downloadinvoice', 'payconfirm', 'sendinvoice'];
         $staffAction = ['allstaff', 'addstaff', 'deletestaff', 'sendmail', 'showstaff', 'editstaff'];
         $hoursAction = ['hours', 'addhours', 'chceckhours', 'printsummaryhours'];
         $companyAction = ['companydata','addcompanydata', 'editcompanydata'];

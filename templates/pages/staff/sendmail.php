@@ -6,7 +6,7 @@
           <div class="row">
             <nav class="templatemo-top-nav col-lg-12 col-md-12">
               <ul class="text-uppercase">
-                <li><a href="/?action=staff" class="active">Wróć do listy pracowników</a></li>
+                <li><a href="/?action=allstaff" class="active">Wróć do listy pracowników</a></li>
                 <li><a href="/?action=showstaff&id=<?php echo (int)$staff['id_worker']?>" class="active">Wróć do danych pracownika: <?php echo $recipment?></a></li>
               </ul>  
             </nav> 
@@ -30,7 +30,6 @@
                     <textarea class="form-control" name="body" rows="10" id="field5"></textarea>
                 </div>
               </div>
-              <?php dump($staff['email'])?>
               <div class="form-group text-right">
                 <button type="submit" class="templatemo-blue-button">Wyślij</button>
               </div>                           

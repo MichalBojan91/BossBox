@@ -9,6 +9,7 @@ class Request
    private array $get = [];
    private array $post = [];
    private array $serwer = [];
+
    public function __construct(array $get, array $post, array $serwer)
    {
       $this->get = $get;
@@ -29,7 +30,6 @@ class Request
    public function hasPost(): bool
    {
       return !empty($this->post); 
-
    }
 
    public function getParam(string $name, $default = null )

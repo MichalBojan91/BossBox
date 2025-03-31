@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -11,9 +12,6 @@ require_once("src/Controller/AbstractController.php");
 use App\DatabaseCompany;
 use App\Request;
 use App\Controller\AbstractController;
-use App\Exception\NotFoundException;
-
-
 
 class CompanyController extends AbstractController
 {

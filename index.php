@@ -1,4 +1,5 @@
 <?php 
+
 declare(strict_types=1);
 
 namespace App;
@@ -7,9 +8,6 @@ require 'vendor/autoload.php';
 
 use App\Controller\AbstractController;
 use App\Exception\AppException;
-use App\StaffController;
-use App\HoursController;
-use App\InvoiceController;
 use App\Controller\ObjectController;
 use App\Request;
 use Throwable;

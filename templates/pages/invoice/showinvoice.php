@@ -13,19 +13,15 @@
         <div class="templatemo-content-widget no-padding">
         <?php $invoice = $params['invoice'] ?? null;?>
         <?php $company = $params['company'] ?? null;?>
-        <?php dump($invoice); ?>
     <body>
-
         <div id="Content">
             <div>
                 <div id="div-1b">
                     <p><b>Faktura</b></p>
                 </div>
-                
                 <div id="div-1d">
                     <p><b><?php echo $invoice['invoice_number']?></b></p>
                 </div>
-
                 <div id="div-1c">
                     Data sprzedaży: <b><?php echo $invoice['sell_date']?></b><br>
                 </div>
@@ -79,6 +75,7 @@
                <a href="/?action=payconfirm&id=<?php echo $invoice['id_invoice']?>"> <button class="templatemo-blue-button">Faktura opłacona</button></a>
                <a href="/?action=editinvoice&id=<?php echo $invoice['id_invoice']?>"> <button class="templatemo-blue-button">Edytuj dane faktury</button></a>
                <a href="/?action=downloadinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button class="templatemo-blue-button">Pobierz/Drukuj</button></a>
+               <a href="/?action=sendinvoice&id=<?php echo (int)$invoice['id_invoice']?>"><button class="templatemo-blue-button">Wyślij fakturę</button></a>
               </div> 
             </form>
 </div>                         

@@ -129,7 +129,7 @@ class StaffController extends AbstractController
         
         $this->redirect(self::DEFAULT_STAFF_ACTION, ['before' =>'mailsent' ]);
     }
-    $this->view->render('sendmail', ['worker' => $this->getWorkerData()]);
+    $this->view->render('staff/sendmail', ['worker' => $this->getWorkerData()]);
 }
 
 }

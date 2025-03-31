@@ -14,13 +14,11 @@ require_once("PHPMailer/src/SMTP.php");
 
 class SendMail
 {
-    public function SendMail(array $mailData): void
+    public function SendMail(array $mailData, $invoicePdf=null, $invoiceNumber=null): void
     {
         $mail = new PHPMailer(true);
 
         try {
-            //Server settings
-            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
@@ -32,17 +30,19 @@ class SendMail
         
             //Recipients
             $mail->setFrom($mail->Username, 'BossBox');
-            $mail->addAddress($mailData['email'], $mailData['recipment']);     //Add a recipient
+            $mail->addAddress($mailData['email'], $mailData['recipment']??null);     //Add a recipient
         
-            //Attachments
-            // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-            // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-        
+           
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
             $mail->Subject = $mailData['subject'];
-            $mail->Body    = $mailData['body'];
-            $mail->AltBody = $mailData['body'];
+            $mail->Body    = nl2br(htmlspecialchars($mailData['body']));;
+            
+            if($invoicePdf){
+                // Dodanie PDF jako załącznika
+            $mail->addStringAttachment($invoicePdf, "Faktura_$invoiceNumber.pdf", 'base64', 'application/pdf');
+            }
+                   
         
             $mail->send();
             } catch (AppException $e) {

@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Request;
 use App\View;
 use App\Database;
-use App\DatabaseNote;
 use App\Exception\ConfigurationException;
 use App\SendMail;
 
@@ -16,7 +15,6 @@ require_once('src/SendMail.php');
 class AbstractController
 {
     protected const DEFAULT_ACTION_MAIN = 'main';
-    
 
     protected static array $configuration = [];
 
@@ -29,7 +27,6 @@ class AbstractController
     public static function initConfiguration(array $configuration): void
     {
         self::$configuration = $configuration;
-
     }
 
     public function __construct(Request $request)
@@ -55,7 +52,6 @@ class AbstractController
            $queryParams = implode('&', $queryParams);
            $location= '?action='. $to .'&'.   $queryParams;
         }
-        
         header("Location: $location"); 
         exit;  
     }
@@ -70,8 +66,6 @@ class AbstractController
         $action = $this->action().'Action';
         if(!method_exists($this, $action)){ // jeśli metoda nie isnieje wykonaj domyślną akcję
             $action = self::DEFAULT_ACTION_MAIN . 'Action';
-            //$this->view->render();
-            
         }   
         $this->$action();    //dzięki temu szuka nazwy metody o nazwie w tej zmiennej i ją wywołuje 
     }
