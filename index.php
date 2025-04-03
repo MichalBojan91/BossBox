@@ -9,6 +9,11 @@ require 'vendor/autoload.php';
 use App\Controller\AbstractController;
 use App\Exception\AppException;
 use App\Controller\ObjectController;
+use App\Controller\InvoiceController;
+use App\Controller\CompanyController;
+use App\Controller\HoursController;
+use App\Controller\NoteController;
+use App\Controller\StaffController;
 use App\Request;
 use Throwable;
 
@@ -21,6 +26,7 @@ require_once('src/Controller/InvoiceController.php');
 require_once('src/Controller/ObjectController.php');
 require_once('src/Request.php');
 require_once("src/View.php");
+
 
 
 $configuration = require("config/config.php");

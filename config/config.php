@@ -4,7 +4,7 @@ return [
   'db' => [
     'host' => 'localhost',
     'database' => 'boss',
-    'user' => 'user_notes',
-    'password' => '4@COawvX76W8y5Mw'
+    'user' => 'boss_box',
+    'password' => '71iFGx6S7s*4[lHE'
   ]
 ];
