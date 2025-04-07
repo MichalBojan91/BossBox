@@ -70,7 +70,6 @@ class DatabaseStaff extends Database
          department = $department, adress = $adress, city = $city, email = $email WHERE id_worker=$id";
         
         $exception = 'Nie udało się zedytować danych pracownika';
-
         $this->dbExec($query, $exception);   
     }
 
