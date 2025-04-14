@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
 use App\Exception\AppException;
 
 require_once("PHPMailer/src/PHPMailer.php");
