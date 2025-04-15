@@ -26,7 +26,10 @@ class Database
         $this->validateConfig($config);
         $this->createConnection($config);
       }catch(PDOException $e){
-        throw new StorageException('Conection error'); 
+        print_r($e->getMessage());
+        dump($config);
+        throw new StorageException('Conection error', 500, $e); 
+        
       }
     }
 
@@ -52,7 +55,7 @@ class Database
 
     protected function createConnection(array $config): void
     { 
-      $dsn = "mysql:host={$config['host']};dbname={$config['database']}";
+      $dsn = "mysql:host={$config['host']};dbname={$config['database']};charset=utf8mb4";
       $this->conn = new PDO($dsn, $config['user'], $config['password'], [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION] );
     }
 

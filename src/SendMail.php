@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App;
 
-use PHPMailer\PHPMailer\PHPMailer;
 use App\Exception\AppException;
 
-require_once("PHPMailer/src/PHPMailer.php");
-require_once("PHPMailer/src/Exception.php");
-require_once("PHPMailer/src/SMTP.php");
+use PHPMailer\PHPMailer\PHPMailer;
+
+
+
+
+// require_once("PHPMailer/src/SMTP.php");
 
 class SendMail
 {

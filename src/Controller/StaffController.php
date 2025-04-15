@@ -6,9 +6,9 @@ namespace App\Controller;
 require_once("src/View.php");
 require_once("src/Database.php");
 require_once("src/DatabaseStaff.php");
-require_once("PHPMailer/src/PHPMailer.php");
-require_once("PHPMailer/src/Exception.php");
-require_once("PHPMailer/src/SMTP.php");
+// require_once("PHPMailer/src/PHPMailer.php");
+// require_once("PHPMailer/src/Exception.php");
+// require_once("PHPMailer/src/SMTP.php");
 
 use App\Controller\AbstractController;
 use App\DatabaseStaff;
